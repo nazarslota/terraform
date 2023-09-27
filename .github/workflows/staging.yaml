@@ -45,7 +45,7 @@ jobs:
 
       - name: Terraform Initialize
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS="terraform-service-account-key.json:
+          export GOOGLE_APPLICATION_CREDENTIALS="terraform-service-account-key.json"
           terraform init
         working-directory: ./deployments/staging
 
