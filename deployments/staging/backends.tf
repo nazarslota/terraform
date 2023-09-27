@@ -1,7 +1,7 @@
 # https://developer.hashicorp.com/terraform/language/settings/backends/gcs
 terraform {
   backend "gcs" {
-    bucket = "terraform-state-bucket-staging"
+    bucket = var.backend_bucket
     prefix = "terraform/state"
   }
 

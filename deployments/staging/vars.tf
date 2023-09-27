@@ -15,3 +15,9 @@ variable "zone" {
   type        = string
   default     = "us-east4-a"
 }
+
+variable "backend_bucket" {
+  description = "The name of the bucket to store terraform state"
+  type        = string
+  default     = "terraform-state-bucket-staging"
+}
