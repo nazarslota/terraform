@@ -26,12 +26,15 @@ jobs:
 
       - name: 'Terraform Init'
         run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/credentials.json
           terraform init
 
       - name: 'Terraform Validate'
         run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/credentials.json
           terraform validate
 
       - name: 'Terraform Plan'
         run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/credentials.json
           terraform plan
