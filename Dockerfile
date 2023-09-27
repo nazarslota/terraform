@@ -1,5 +1,5 @@
 # Use the official Go image to create a build artifact.
-FROM golang:1.20.1-alpine as builder
+FROM golang:1.20 as builder
 
 # Set the working directory outside $GOPATH to enable the go modules.
 WORKDIR /src
@@ -11,7 +11,7 @@ ADD ./ .
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o app
 
 # Use a minimal alpine image
-FROM alpine:3.14
+FROM alpine
 
 # Copy the binary to the production image from the builder stage.
 COPY --from=builder /src/app /app
