@@ -38,17 +38,18 @@ jobs:
           service_account_key: ${{ secrets.GCR_JSON_KEY }}
           export_default_credentials: true
 
-      - name: Go to Terraform Directory
-        run: cd deployments/staging
-
       - name: Terraform Initialize
         run: terraform init
+        working-directory: ./deployments/staging
 
       - name: Terraform Validate
         run: terraform validate
+        working-directory: ./deployments/staging
 
       - name: Terraform Plan
         run: terraform plan
+        working-directory: ./deployments/staging
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        working-directory: ./deployments/staging
