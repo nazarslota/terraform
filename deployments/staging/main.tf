@@ -22,6 +22,6 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
   node_config {
     preemptible  = true
-    machine_type = "f1-micro"
+    machine_type = var.k8s_machine_type
   }
 }

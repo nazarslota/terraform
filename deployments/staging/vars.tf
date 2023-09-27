@@ -32,7 +32,7 @@ variable "k8s_node_pool_name" {
 variable "k8s_machine_type" {
   description = "The machine type to use for the Kubernetes cluster."
   type        = string
-  default     = "e2-medium"
+  default     = "f1-micro"
 }
 
 variable "k8s_node_count" {
