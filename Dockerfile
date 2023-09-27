@@ -1,5 +1,5 @@
 # Use the official Go image to create a build artifact.
-FROM golang:1.17 as builder
+FROM golang:1.20.1-alpine as builder
 
 # Set the working directory outside $GOPATH to enable the go modules.
 WORKDIR /src
