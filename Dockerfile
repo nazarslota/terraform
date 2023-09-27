@@ -5,7 +5,7 @@ FROM golang:1.20.1-alpine as builder
 WORKDIR /src
 
 # Copy the local package files to the container’s workspace.
-ADD main.go .
+ADD ./ .
 
 # Build the command inside the container.
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o app
