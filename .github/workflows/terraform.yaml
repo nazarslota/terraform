@@ -38,3 +38,8 @@ jobs:
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=$PWD/credentials.json
           terraform plan
+
+      - name: 'Terraform Apply'
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=$PWD/credentials.json
+          terraform apply -auto-approve
