@@ -15,3 +15,9 @@ variable "zone" {
   type        = string
   default     = "us-east4-a"
 }
+
+variable "credentials_file_path" {
+  description = "The path to the credentials file for GCP"
+  type        = string
+  default     = "../../credentials.json"
+}
