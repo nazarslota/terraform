@@ -1,5 +1,5 @@
 provider "google" {
-  project = "unotes-000"
+  project = var.project_id
   region  = var.region
   zone    = var.zone
 }
@@ -12,7 +12,7 @@ resource "google_container_cluster" "primary" {
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-1"
+    machine_type = "e2-micro"
   }
 }
 
@@ -22,8 +22,7 @@ resource "kubernetes_deployment" "my-go-app" {
   }
 
   spec {
-    replicas = 2
-
+    replicas = 3
     selector {
       match_labels = {
         app = "my-go-app"
@@ -40,7 +39,7 @@ resource "kubernetes_deployment" "my-go-app" {
       spec {
         container {
           name  = "my-go-app"
-          image = "gcr.io/YOUR_PROJECT_ID/my-go-app"
+          image = "gcr.io/${var.project_id}/my-go-app"
 
           port {
             container_port = 8080
