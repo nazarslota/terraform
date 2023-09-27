@@ -40,29 +40,29 @@ jobs:
 
       - name: Create credentials file
         run: |
-          echo "${{ secrets.GCP_TERRAFORM_SERVICE_ACCOUNT_KEY }}" > terraform-service-account-key.json
+          echo "${{ secrets.GCP_TERRAFORM_SERVICE_ACCOUNT_KEY }}" > "terraform-service-account-key.json"
         working-directory: ./deployments/staging
 
       - name: Terraform Initialize
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS=terraform-service-account-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="terraform-service-account-key.json:
           terraform init
         working-directory: ./deployments/staging
 
       - name: Terraform Validate
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS=terraform-service-account-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="terraform-service-account-key.json"
           terraform validate
         working-directory: ./deployments/staging
 
       - name: Terraform Plan
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS=terraform-service-account-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="terraform-service-account-key.json"
           terraform plan
         working-directory: ./deployments/staging
 
       - name: Terraform Apply
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS=terraform-service-account-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="terraform-service-account-key.json"
           terraform apply -auto-approve
         working-directory: ./deployments/staging
