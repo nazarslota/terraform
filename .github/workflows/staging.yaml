@@ -43,17 +43,25 @@ jobs:
           echo ${{ secrets.GCP_TERRAFORM_SERVICE_ACCOUNT_KEY }} > terraform-service-account-key.json
 
       - name: Terraform Initialize
-        run: terraform init
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=terraform-service-account-key.json
+          terraform init
         working-directory: ./deployments/staging
 
       - name: Terraform Validate
-        run: terraform validate
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=terraform-service-account-key.json
+          terraform validate
         working-directory: ./deployments/staging
 
       - name: Terraform Plan
-        run: terraform plan
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=terraform-service-account-key.json
+          terraform plan
         working-directory: ./deployments/staging
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS=terraform-service-account-key.json
+          terraform apply -auto-approve
         working-directory: ./deployments/staging
