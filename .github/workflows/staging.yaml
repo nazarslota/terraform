@@ -32,7 +32,7 @@ jobs:
           tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-go-app:latest
 
       - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@main
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCR_JSON_KEY }}
