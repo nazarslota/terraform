@@ -11,7 +11,7 @@ resource "google_container_cluster" "primary" {
 
   node_config {
     preemptible  = true
-    machine_type = "e2-micro"
+    machine_type = "custom-1-512"
   }
 
   master_auth {
