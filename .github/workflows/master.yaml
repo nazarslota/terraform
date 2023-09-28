@@ -49,6 +49,8 @@ jobs:
   build:
     needs: infrastructure
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-service-account-key.json
     steps:
       - name: 'Checkout code'
         uses: actions/checkout@v4
@@ -56,7 +58,7 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
-          service_account_key: ${{ env.GCP_SERVICE_ACCOUNT_KEY }}
+          service_account_key: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
 
       - run: |-
           gcloud --quiet --verbosity=debug auth configure-docker
