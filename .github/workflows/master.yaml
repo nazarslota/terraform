@@ -14,6 +14,7 @@ env:
 
   GKE_CLUSTER: 'unotes-000-gke'
   GKE_ZONE: 'us-east4-a'
+  GKE_IMAGE: 'jurny-rider-backend'
   K8S_MANIFEST: './deployments/deployment.yaml'
 
 jobs:
@@ -35,7 +36,7 @@ jobs:
       - name: 'Build the Docker image'
         run: |-
           docker build \
-            --tag "gcr.io/${{ env.PROJECT_ID }}/{{ env.IMAGE }}:$GITHUB_SHA" \
+            --tag "gcr.io/${{ env.PROJECT_ID }}/{{ env.GKE_IMAGE }}:$GITHUB_SHA" \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" \
           .
