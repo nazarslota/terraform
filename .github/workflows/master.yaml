@@ -14,7 +14,7 @@ env:
 
   GKE_CLUSTER: 'unotes-000-gke'
   GKE_ZONE: 'us-east4-a'
-  K8s_MANIFEST: './deployments/deployment.yaml'
+  K8S_MANIFEST: './deployments/deployment.yaml'
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
       - name: 'Build the Docker image'
         run: |-
           docker build \
-            --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+            --tag "gcr.io/${{ env.PROJECT_ID }}/{{ env.IMAGE }}:$GITHUB_SHA" \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" \
           .
@@ -90,12 +90,12 @@ jobs:
           location: ${{ env.GKE_ZONE }}
           credentials: ${{ env.GCP_SERVICE_ACCOUNT_KEY }}
 
-      - name: Set up Kustomize
+      - name: 'Set up Kustomize'
         run: |-
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
-      - name: Deploy
+      - name: 'Deploy'
         run: |-
           ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           ./kustomize build . | kubectl apply -f -
