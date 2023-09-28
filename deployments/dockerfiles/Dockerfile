@@ -11,7 +11,7 @@ ADD ./ .
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o app
 
 # Use a minimal alpine image
-FROM alpine
+FROM alpine:latest
 
 # Copy the binary to the production image from the builder stage.
 COPY --from=builder /src/app /app
