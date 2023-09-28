@@ -76,6 +76,17 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS='gcp-service-account-key.json'
           terraform apply -auto-approve
 
+      - name: Set Cluster Info as Env Vars
+        id: set_vars
+        run: |
+          echo "::set-output name=cluster_name::$(terraform output -raw cluster_name)"
+          echo "::set-output name=cluster_zone::$(terraform output -raw cluster_zone)"
+
+      - name: Print Cluster Info
+        run: |
+          echo ${{ steps.set_vars.outputs.cluster_name }}
+          echo ${{ steps.set_vars.outputs.cluster_zone }}
+
 #      - name: Set Cluster Info as Env Vars
 #        id: set_vars
 #        run: |
