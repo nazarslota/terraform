@@ -20,13 +20,13 @@ variable "zone" {
 variable "k8s_cluster_name" {
   description = "The name of the Kubernetes cluster."
   type        = string
-  default     = "staging"
+  default     = "jurny-rider-backend"
 }
 
 variable "k8s_node_pool_name" {
   description = "The name of the Kubernetes node pool."
   type        = string
-  default     = "staging-pool"
+  default     = "jurny-rider-backend-pool"
 }
 
 variable "k8s_machine_type" {
