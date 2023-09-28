@@ -37,8 +37,8 @@ jobs:
             --build-arg GITHUB_REPOSITORY=${{ github.repository }}
           context: .
           file: ./deployments/dockerfiles/Dockerfile
-#          cache-from: type=local,src=/tmp/.buildx-cache
-#          cache-to: type=local,dest=/tmp/.buildx-cache
+  #          cache-from: type=local,src=/tmp/.buildx-cache
+  #          cache-to: type=local,dest=/tmp/.buildx-cache
 
   infrastructure:
     needs: build
@@ -81,7 +81,9 @@ jobs:
           export_default_credentials: true
 
       - name: Configure kubectl
-        run: gcloud container clusters get-credentials unotes-000-gke --zone us-east4-a --project ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=true
+          gcloud container clusters get-credentials unotes-000-gke --zone us-east4-a --project ${{ secrets.GCP_PROJECT_ID }}
 
       # Debug: Print the K8S_DEPLOYMENT_FILE environment variable and list files in the current directory
       - name: Debug Info
