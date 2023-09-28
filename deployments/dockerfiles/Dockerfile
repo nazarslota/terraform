@@ -11,7 +11,7 @@ COPY ./ .
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o app
 
 # Use a minimal alpine image with a specific version.
-FROM alpine:3.14
+FROM alpine
 
 # Create a non-root user and switch to it.
 RUN adduser -D appuser
