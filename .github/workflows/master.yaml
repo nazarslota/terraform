@@ -24,13 +24,13 @@ jobs:
       run:
         working-directory: deployments/terraform
     steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v2
+
       - name: 'Setup Google Cloud credentials'
         run: |-
           echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > ${{ github.workspace }}/gcp-service-account-key.json
           export GOOGLE_APPLICATION_CREDENTIALS="${{ github.workspace }}/gcp-service-account-key.json"
-
-      - name: 'Checkout code'
-        uses: actions/checkout@v2
 
       - name: 'Terraform initialize'
         run: terraform init
