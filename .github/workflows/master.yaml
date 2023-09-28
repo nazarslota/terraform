@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./deployments/terraform
+        working-directory: deployments/terraform
     steps:
       - name: 'Setup Google Cloud credentials'
         run: |-
