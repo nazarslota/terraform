@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jurny-rider-backend
+spec:
+  replicas: 3  # specify the number of pod replicas
+  selector:
+    matchLabels:
+      app: jurny-rider-backend
+  template:
+    metadata:
+      labels:
+        app: jurny-rider-backend
+    spec:
+      containers:
+        - name: jurny-rider-backend
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/jurny-rider-backend:latest
