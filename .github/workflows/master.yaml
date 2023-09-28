@@ -27,21 +27,26 @@ jobs:
       - name: 'Checkout code'
         uses: actions/checkout@v4
 
-      - name: 'Setup Google Cloud credentials'
-        run: export GOOGLE_APPLICATION_CREDENTIALS='${{ env.GCP_SERVICE_ACCOUNT_KEY }}'
-
       - name: 'Terraform initialize'
-        run: terraform init
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS='${{ env.GCP_SERVICE_ACCOUNT_KEY }}'
+          terraform init
 
       - name: 'Terraform validate'
-        run: terraform validate
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS='${{ env.GCP_SERVICE_ACCOUNT_KEY }}'
+          terraform validate
 
       - name: 'Terraform plan'
-        run: terraform plan
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS='${{ env.GCP_SERVICE_ACCOUNT_KEY }}'
+          terraform plan
 
       - name: 'Terraform apply'
         if: github.ref == 'refs/heads/master'
-        run: terraform apply -auto-approve
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS='${{ env.GCP_SERVICE_ACCOUNT_KEY }}'
+          terraform apply -auto-approve
 
   build:
     needs: infrastructure
