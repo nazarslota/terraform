@@ -80,7 +80,13 @@ jobs:
           export_default_credentials: true
 
       - name: Configure kubectl
-        run: gcloud container clusters get-credentials unotes-000-gke --zone us-east4-a --project ${{ secrets.GCP_PROJECT_ID }}
+        run: gcloud container clusters get-credentials YOUR_CLUSTER_NAME --zone YOUR_ZONE --project ${{ secrets.GCP_PROJECT_ID }}
+
+      # Debug: Print the K8S_DEPLOYMENT_FILE environment variable and list files in the current directory
+      - name: Debug Info
+        run: |
+          echo "K8S_DEPLOYMENT_FILE: ${{ env.K8S_DEPLOYMENT_FILE }}"
+          ls -l
 
       - name: Deploy to Kubernetes
         run: kubectl apply -f ${{ env.K8S_DEPLOYMENT_FILE }}
