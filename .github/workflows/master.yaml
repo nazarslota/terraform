@@ -64,7 +64,6 @@ jobs:
           project_id: ${{ env.GCP_PROJECT_ID }}
         run: |-
           gcloud --quiet auth configure-docker
-          gcloud auth list
 
       - name: 'Build the Docker image'
         run: |-
