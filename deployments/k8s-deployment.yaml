@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: jurny-rider-backend
 spec:
-  replicas: 3  # specify the number of pod replicas
+  replicas: 3
   selector:
     matchLabels:
       app: jurny-rider-backend
@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
         - name: jurny-rider-backend
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/jurny-rider-backend:latest
+          image: gcr.io/unotes-000/jurny-rider-backend:latest
