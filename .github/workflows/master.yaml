@@ -76,28 +76,10 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS='gcp-service-account-key.json'
           terraform apply -auto-approve
 
-      - name: Set Cluster Info as Env Vars
-        id: set_vars
+      - name: Configure kubectl
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS='gcp-service-account-key.json'
-          echo "::set-output name=cluster_name::$(terraform output -raw project_name)"
-          echo "::set-output name=cluster_zone::$(terraform output -raw zone)"
+          gcloud container clusters get-credentials unotes-000-gke --zone us-east4-a --project unotes-000
 
-      - name: Print Cluster Info
+      - name: Deploy to GKE
         run: |
-          echo ${{ steps.set_vars.outputs.cluster_name }}
-          echo ${{ steps.set_vars.outputs.cluster_zone }}
-
-#      - name: Set Cluster Info as Env Vars
-#        id: set_vars
-#        run: |
-#          echo "::set-output name=cluster_name::$(terraform output -raw cluster_name)"
-#          echo "::set-output name=cluster_zone::$(terraform output -raw cluster_zone)"
-#
-#      - name: Configure kubectl
-#        run: |
-#          gcloud container clusters get-credentials ${{ steps.set_vars.outputs.cluster_name }} --zone ${{ steps.set_vars.outputs.cluster_zone }} --project ${{ secrets.GCP_PROJECT_ID }}
-#
-#      - name: Deploy to GKE
-#        run: |
-#          kubectl apply -f ../k8s-deployment.yaml
+          kubectl apply -f ../k8s-deployment.yaml
