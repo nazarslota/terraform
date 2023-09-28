@@ -39,7 +39,7 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
-  deploy:
+  infrastructure:
     needs: build
     runs-on: ubuntu-latest
     defaults:
