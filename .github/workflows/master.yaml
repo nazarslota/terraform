@@ -18,7 +18,33 @@ env:
   K8S_MANIFEST: './deployments/deployment.yaml'
 
 jobs:
+  infrastructure:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./deployments/terraform
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v4
+
+      - name: 'Setup Google Cloud credentials'
+        run: echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > $GOOGLE_APPLICATION_CREDENTIALS
+
+      - name: 'Terraform initialize'
+        run: terraform init
+
+      - name: 'Terraform validate'
+        run: terraform validate
+
+      - name: 'Terraform plan'
+        run: terraform plan
+
+      - name: 'Terraform apply'
+        if: github.ref == 'refs/heads/master'
+        run: terraform apply -auto-approve
+
   build:
+    needs: infrastructure
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout code'
@@ -46,34 +72,8 @@ jobs:
         run: |-
           docker push "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:$GITHUB_SHA"
 
-  infrastructure:
-    needs: build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./deployments/terraform
-    steps:
-      - name: 'Checkout code'
-        uses: actions/checkout@v4
-
-      - name: 'Setup Google Cloud credentials'
-        run: echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > $GOOGLE_APPLICATION_CREDENTIALS
-
-      - name: 'Terraform initialize'
-        run: terraform init
-
-      - name: 'Terraform validate'
-        run: terraform validate
-
-      - name: 'Terraform plan'
-        run: terraform plan
-
-      - name: 'Terraform apply'
-        if: github.ref == 'refs/heads/master'
-        run: terraform apply -auto-approve
-
   deploy:
-    needs: infrastructure
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout Code'
