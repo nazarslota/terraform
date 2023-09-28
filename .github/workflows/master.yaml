@@ -82,7 +82,7 @@ jobs:
 
       - name: Configure kubectl
         run: |
-          gcloud container clusters get-credentials unotes-000-gke --zone us-east4-a --project ${{ secrets.GCP_PROJECT_ID }} --internal-ip --quiet --use-auth-provider=false
+          gcloud container clusters get-credentials unotes-000-gke --zone us-east4-a --project ${{ secrets.GCP_PROJECT_ID }} --internal-ip --quiet
 
       - name: Deploy to Kubernetes
         run: kubectl apply -f ${{ env.GOOGLE_K8S_DEPLOYMENT_FILE }}
