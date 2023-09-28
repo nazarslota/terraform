@@ -45,16 +45,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@main
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-          export_default_credentials: true
-
       - name: Setup Google Cloud credentials
         run: |
           echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > $PWD/gcp-service-account-key.json
+
 
       - name: Terraform initialize
         run: |
@@ -75,6 +69,13 @@ jobs:
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS='gcp-service-account-key.json'
           terraform apply -auto-approve
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@main
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          export_default_credentials: true
 
       - name: Configure kubectl
         run: |
