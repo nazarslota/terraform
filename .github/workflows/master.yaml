@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 'Setup Google Cloud credentials'
-        run: echo '${{ env.GCP_SERVICE_ACCOUNT_KEY }}' > $GOOGLE_APPLICATION_CREDENTIALS
+        run: export GOOGLE_APPLICATION_CREDENTIALS='${{ env.GCP_SERVICE_ACCOUNT_KEY }}'
 
       - name: 'Terraform initialize'
         run: terraform init
