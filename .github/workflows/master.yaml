@@ -80,8 +80,8 @@ jobs:
         id: set_vars
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS='gcp-service-account-key.json'
-          echo "::set-output name=cluster_name::$(terraform output -raw cluster_name)"
-          echo "::set-output name=cluster_zone::$(terraform output -raw cluster_zone)"
+          echo "::set-output name=cluster_name::$(terraform output -raw project_name)"
+          echo "::set-output name=cluster_zone::$(terraform output -raw zone)"
 
       - name: Print Cluster Info
         run: |
