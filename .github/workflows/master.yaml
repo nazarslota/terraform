@@ -86,8 +86,8 @@ jobs:
       # Debug: Print the K8S_DEPLOYMENT_FILE environment variable and list files in the current directory
       - name: Debug Info
         run: |
-          echo "K8S_DEPLOYMENT_FILE: ${{ env.K8S_DEPLOYMENT_FILE }}"
+          echo "GOOGLE_K8S_DEPLOYMENT_FILE: ${{ env.GOOGLE_K8S_DEPLOYMENT_FILE }}"
           ls -l
 
       - name: Deploy to Kubernetes
-        run: kubectl apply -f ${{ env.K8S_DEPLOYMENT_FILE }}
+        run: kubectl apply -f ${{ env.GOOGLE_K8S_DEPLOYMENT_FILE }}
