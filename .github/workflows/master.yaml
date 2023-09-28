@@ -7,6 +7,7 @@ on:
 
 env:
   GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-service-account-key.json
+  GOOGLE_K8S_DEPLOYMENT_FILE: ${{ github.workspace }}/deployments/deployment.yaml
 
 jobs:
   build:
