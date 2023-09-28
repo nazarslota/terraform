@@ -36,6 +36,7 @@ jobs:
       - name: 'Build the Docker image'
         run: |-
           docker build \
+            --file ./deployments/dockerfiles/Dockerfile \
             --tag "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:$GITHUB_SHA" \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" \
