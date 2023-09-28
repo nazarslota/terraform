@@ -20,6 +20,8 @@ env:
 jobs:
   infrastructure:
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-service-account-key.json
     defaults:
       run:
         working-directory: deployments/terraform
@@ -29,8 +31,7 @@ jobs:
 
       - name: 'Setup Google Cloud credentials'
         run: |-
-          echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > ${{ github.workspace }}/gcp-service-account-key.json
-          echo '${{ github.workspace }}/gcp-service-account-key.json' > $GOOGLE_APPLICATION_CREDENTIALS
+          echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > $GOOGLE_APPLICATION_CREDENTIALS
 
       - name: 'Terraform initialize'
         run: terraform init
