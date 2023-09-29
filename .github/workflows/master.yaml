@@ -59,16 +59,16 @@ jobs:
       #        with:
       #          project_id: ${{ env.GCP_PROJECT_ID }}
       #
-      #      - name: setup docker
-      #        run: gcloud --quiet auth configure-docker
-      #
-      #      - name: build docker image
-      #        run: |
-      #          docker build \
-      #            --file ./deployments/dockerfiles/Dockerfile \
-      #            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest \
-      #            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }} \
-      #            .
+      - name: setup docker
+        run: gcloud --quiet auth configure-docker
+
+      - name: build docker image
+        run: |
+          docker build \
+            --file ./deployments/dockerfiles/Dockerfile \
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest \
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }} \
+            .
       #
       #      - name: push docker image
       #        run: |
@@ -77,4 +77,5 @@ jobs:
 
       - name: setup kubectl
         run: |
+          gcloud components install gke-gcloud-auth-plugin
           gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --region ${{ env.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
