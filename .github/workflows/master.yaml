@@ -71,8 +71,9 @@ jobs:
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }}
 
       - name: setup kubectl
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          export_default_credentials: true
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
+          sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" ${{ env.K8S_MANIFEST }}
+          kubectl apply -f ${{ env.K8S_MANIFEST }}
