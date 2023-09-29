@@ -77,6 +77,6 @@ jobs:
           cluster_name: ${{ env.GKE_CLUSTER }}
           location: ${{ env.GKE_ZONE }}
 
-      - run: kubectl create deployment hello-app --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }}
+      - run: kubectl create deployment jurny-rider-backend --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }}
 
       - run: kubectl get pods
