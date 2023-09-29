@@ -9,8 +9,9 @@ on:
       - master
 
 env:
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+  # These secrets should be set in the repository settings:
+  #   GCP_PROJECT_ID
+  #   GCP_SERVICE_ACCOUNT_KEY
 
   GKE_CLUSTER: 'unotes-000-gke'
   GKE_ZONE: 'us-east4-a'
@@ -20,94 +21,57 @@ env:
 jobs:
   infrastructure:
     runs-on: ubuntu-latest
-    env:
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-service-account-key.json
     defaults:
       run:
         working-directory: deployments/terraform
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-service-account-key.json
     steps:
-      - name: 'Checkout code'
+      - name: checkout code
         uses: actions/checkout@v4
 
-      - name: 'Setup Google Cloud credentials'
-        run: |-
-          echo '${{ env.GCP_SERVICE_ACCOUNT_KEY }}' > $GOOGLE_APPLICATION_CREDENTIALS
+      - run: echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > $GOOGLE_APPLICATION_CREDENTIALS
 
-      - name: 'Terraform initialize'
-        run: terraform init
+      - run: terraform init
 
-      - name: 'Terraform validate'
-        run: terraform validate
+      - run: terraform validate
 
-      - name: 'Terraform plan'
-        run: terraform plan
+      - run: terraform plan
 
-      - name: 'Terraform apply'
+      - name: apply infrastructure
         if: github.ref == 'refs/heads/master'
         run: terraform apply -auto-approve
 
-  build:
+  build-deploy:
     needs: infrastructure
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout code'
+      - name: checkout code
         uses: actions/checkout@v4
 
-      - name: 'Set up Google Cloud auth'
+      - name: setup gcloud
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ env.GCP_SERVICE_ACCOUNT_KEY }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-      - name: 'Set up Google Cloud project id'
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: ${{ env.GCP_PROJECT_ID }}
+      - name: setup docker
+        run: gcloud --quiet auth configure-docker
 
-      - name: 'Set up auth for Docker'
-        run: |-
-          gcloud --quiet auth configure-docker
-          gcloud auth list
-
-      - name: 'Build the Docker image'
-        run: |-
+      - name: build docker image
+        run: |
           docker build \
-            --file ./deployments/dockerfiles/Dockerfile \
-            --tag "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:$GITHUB_SHA" \
-            --build-arg GITHUB_SHA="$GITHUB_SHA" \
-            --build-arg GITHUB_REF="$GITHUB_REF" \
-          .
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest \
+            --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }} \
+            .
 
-      - name: 'Push the Docker image to Google Container Registry'
-        run: |-
-          docker tag "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:$GITHUB_SHA" "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest"
-          docker push "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest"
+      - name: push docker image
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }}
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout Code'
-        uses: actions/checkout@v4
-
-      - name: 'Set up Google Cloud auth'
-        uses: google-github-actions/auth@v1
+      - name: setup kubectl
+        uses: google-github-actions/setup-gcloud@v0.2.0
         with:
-          credentials_json: ${{ env.GCP_SERVICE_ACCOUNT_KEY }}
-
-      - name: 'Set up Cloud SDK'
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: ${{ env.GCP_PROJECT_ID }}
-
-      - name: 'Get GKE credentials'
-        uses: google-github-actions/get-gke-credentials@v1
-        with:
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          cluster_name: ${{ env.GKE_CLUSTER }}
-          location: ${{ env.GKE_ZONE }}
-
-      - name: 'Deploy'
-        run: |-
-          kubectl apply -f ${{ env.K8S_MANIFEST }}
-          kubectl rollout status deployment/{{ env.GKE_IMAGE }}
-          kubectl get services -o wide
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
