@@ -54,11 +54,6 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-      #      - name: setup gcloud
-      #        uses: google-github-actions/setup-gcloud@v1
-      #        with:
-      #          project_id: ${{ env.GCP_PROJECT_ID }}
-      #
       - name: setup docker
         run: gcloud --quiet auth configure-docker
 
@@ -81,5 +76,7 @@ jobs:
         with:
           cluster_name: ${{ env.GKE_CLUSTER }}
           location: ${{ env.GKE_ZONE }}
+
+      - run: kubectl create deployment hello-app --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }}
 
       - run: kubectl get pods
