@@ -52,7 +52,7 @@ jobs:
       - name: setup gcloud
         uses: google-github-actions/auth@v1
         with:
-          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: setup docker
         run: gcloud --quiet auth configure-docker
