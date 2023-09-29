@@ -60,7 +60,7 @@ jobs:
       - name: build docker image
         run: |
           docker build \
-            --file ./deployments/docker/Dockerfile \
+            --file ./deployments/dockerfiles/Dockerfile \
             --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest \
             --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }} \
             .
