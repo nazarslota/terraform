@@ -31,7 +31,7 @@ jobs:
 
       - name: 'Setup Google Cloud credentials'
         run: |-
-          echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > $GOOGLE_APPLICATION_CREDENTIALS
+          echo '${{ env.GCP_SERVICE_ACCOUNT_KEY }}' > $GOOGLE_APPLICATION_CREDENTIALS
 
       - name: 'Terraform initialize'
         run: terraform init
@@ -56,7 +56,7 @@ jobs:
       - name: 'Set up Google Cloud auth'
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          credentials_json: ${{ env.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: 'Set up Google Cloud project id'
         uses: google-github-actions/setup-gcloud@v1
@@ -88,11 +88,15 @@ jobs:
       - name: 'Checkout Code'
         uses: actions/checkout@v4
 
+      - name: 'Set up Google Cloud auth'
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ env.GCP_SERVICE_ACCOUNT_KEY }}
+
       - name: 'Set up Cloud SDK'
         uses: google-github-actions/setup-gcloud@v1
         with:
-          project_id: ${{ env.GCP_PROJECT_ID }} # Change env to secrets, assuming the project ID is stored as a secret.
-          service_account_key: ${{ env.GCP_SERVICE_ACCOUNT_KEY }} # Same here, assuming the service account key is stored as a secret.
+          project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: 'Get GKE credentials'
         uses: google-github-actions/get-gke-credentials@v1
