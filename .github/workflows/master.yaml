@@ -49,10 +49,15 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v4
 
-      - name: setup gcloud
+      - name: setup gcloud auth
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: setup gcloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: setup docker
         run: gcloud --quiet auth configure-docker
@@ -73,4 +78,3 @@ jobs:
       - name: setup kubectl
         run: |
           gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
-          
