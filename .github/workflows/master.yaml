@@ -70,15 +70,7 @@ jobs:
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }}
 
-      - name: Install gke-gcloud-auth-plugin
-        run: |
-          sudo apt-get install kubectl
-          gcloud components install kubectl
-
       - name: setup kubectl
-        env:
-          GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
-          sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" ${{ env.K8S_MANIFEST }}
-          kubectl apply -f ${{ env.K8S_MANIFEST }}
+          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
+          
