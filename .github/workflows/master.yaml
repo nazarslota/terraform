@@ -79,7 +79,8 @@ jobs:
 
       - name: 'Push the Docker image to Google Container Registry'
         run: |-
-          docker push "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:$GITHUB_SHA"
+          docker tag "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:$GITHUB_SHA" "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest"
+          docker push "gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest"
 
   deploy:
     needs: build
