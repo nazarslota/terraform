@@ -75,7 +75,11 @@ jobs:
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.GKE_IMAGE }}:${{ github.sha }}
 
-      - name: setup kubectl
-        run: |
-          gcloud components install gke-gcloud-auth-plugin
-          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --region ${{ env.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
+      - uses: simenandre/setup-gke-gcloud-auth-plugin@v1
+
+      - uses: google-github-actions/get-gke-credentials@v1
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+
+      - run: kubectl get pods
