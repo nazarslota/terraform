@@ -1,0 +1,4 @@
+/deployment-service-account.json
+/terraform.tfvars
+/.terraform/
+/.terraform.lock.hcl
