@@ -1,10 +1,8 @@
 # backends.tf
 
 terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~>5.12"
-    }
+  backend "gcs" {
+    bucket = "devops-411922"
+    prefix = "terraform/state"
   }
 }
